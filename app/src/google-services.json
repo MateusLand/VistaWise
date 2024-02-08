@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "338144789334",
+    "project_id": "vistawise",
+    "storage_bucket": "vistawise.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:338144789334:android:e76ad856c671b294b8ccf7",
+        "android_client_info": {
+          "package_name": "com.example.vistawise"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD6JHTYjQWRIt1RLk4gY0863lE1vYgqNWU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

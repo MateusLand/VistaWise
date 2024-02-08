@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">VistaWise</string>
+    <string name="splash_background_logo">splash_background_logo</string>
+    <string name="logout">Logout</string>
+    <string name="register">Register</string>
+    <string name="logo_description">login_logo</string>
+    <string name="don_t_have_an_account_sign_up">Don\'t have an account? Sign up</string>
+</resources>
