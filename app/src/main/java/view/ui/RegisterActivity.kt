@@ -1,4 +1,4 @@
-package com.example.vistawise
+package view.ui
 
 import android.content.Intent
 import android.os.Bundle
@@ -9,10 +9,11 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.example.vistawise.R
 import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.auth.FirebaseAuth
 
-class Register : AppCompatActivity() {
+class RegisterActivity : AppCompatActivity() {
     private lateinit var auth: FirebaseAuth
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -30,7 +31,7 @@ class Register : AppCompatActivity() {
 
         // Set click listener for loginNow TextView
         loginNow.setOnClickListener {
-            val intent = Intent(this@Register, Login::class.java)
+            val intent = Intent(this@RegisterActivity, LoginActivity::class.java)
             startActivity(intent)
             // Optional: close the current activity
             // finish()
@@ -66,7 +67,7 @@ class Register : AppCompatActivity() {
                             // Registration is successful, navigate to the main activity
                             navigateToMainActivity()
                             Toast.makeText(
-                                this@Register,
+                                this@RegisterActivity,
                                 "Account Created.",
                                 Toast.LENGTH_SHORT
                             ).show()
@@ -74,7 +75,7 @@ class Register : AppCompatActivity() {
                             // If registration fails, display a message to the user.
                             Log.e("Registration Error", "Registration failed", task.exception)
                             Toast.makeText(
-                                this@Register,
+                                this@RegisterActivity,
                                 "Registration failed. ${task.exception?.message}",
                                 Toast.LENGTH_SHORT
                             ).show()
@@ -95,7 +96,7 @@ class Register : AppCompatActivity() {
     }
 
     private fun navigateToMainActivity() {
-        val intent = Intent(this@Register, MainActivity::class.java)
+        val intent = Intent(this@RegisterActivity, MainActivity::class.java)
         startActivity(intent)
         // Optional: close the current activity
         // finish()

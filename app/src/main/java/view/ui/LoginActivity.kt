@@ -1,5 +1,6 @@
-package com.example.vistawise
+package view.ui
 
+import viewmodel.LoginViewModel
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -9,11 +10,21 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
+import com.example.vistawise.R
 import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.auth.FirebaseAuth
+import androidx.activity.viewModels
+import network.UserService
+import repository.UserRepository
 
-class Login : AppCompatActivity() {
+class LoginActivity : AppCompatActivity() {
     private lateinit var auth: FirebaseAuth
+
+    private val loginViewModel: LoginViewModel by viewModels {
+        ViewModelProvider.AndroidViewModelFactory.getInstance(application)
+        LoginViewModelFactory(UserRepository(UserService(FirebaseAuth.getInstance()))) // Provide an instance of UserRepository
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,13 +47,13 @@ class Login : AppCompatActivity() {
                     .addOnCompleteListener { task ->
                         if (task.isSuccessful) {
                             Toast.makeText(
-                                this@Login,
+                                this@LoginActivity,
                                 "Password reset email sent. Check your email.",
                                 Toast.LENGTH_SHORT
                                 ).show()
                         } else {
                             Toast.makeText(
-                                this@Login,
+                                this@LoginActivity,
                                 "Failed to send password reset email.",
                                 Toast.LENGTH_SHORT
                             ).show()
@@ -50,7 +61,7 @@ class Login : AppCompatActivity() {
                     }
             } else {
                 Toast.makeText(
-                    this@Login,
+                    this@LoginActivity,
                     "Enter your registered email address.",
                     Toast.LENGTH_SHORT
                     ).show()
@@ -59,7 +70,7 @@ class Login : AppCompatActivity() {
 
         // Set click listener for registerNow TextView
         registerNow.setOnClickListener {
-            val intent = Intent(this@Login, Register::class.java)
+            val intent = Intent(this@LoginActivity, RegisterActivity::class.java)
             startActivity(intent)
             finish() // Optional: close the current activity
         }
@@ -77,35 +88,36 @@ class Login : AppCompatActivity() {
             buttonLogin.visibility = View.INVISIBLE
             progressBar.visibility = View.VISIBLE
 
-            auth.signInWithEmailAndPassword(email, password)
-                .addOnCompleteListener { task ->
-                    progressBar.visibility = View.INVISIBLE
-                    buttonLogin.visibility = View.VISIBLE
+            loginViewModel.loginUser(email, password)
+        }
 
-                    if (task.isSuccessful) {
-                        Toast.makeText(
-                            this@Login,
-                            "Login Successful.",
-                            Toast.LENGTH_SHORT,
-                        ).show()
+        loginViewModel.loginStatus.observe(this) { isLoggedIn ->
+            progressBar.visibility = View.INVISIBLE
+            buttonLogin.visibility = View.VISIBLE
 
-                        // Create an intent to navigate to the MainActivity
-                        val intent = Intent(this@Login, MainActivity::class.java)
-                        startActivity(intent)
-                        finish() // Optional: close the current activity
+            if (isLoggedIn) {
+                Toast.makeText(
+                    this@LoginActivity,
+                    "Login Successful.",
+                    Toast.LENGTH_SHORT,
+                ).show()
 
-                    } else {
-                        // If sign in fails, display a message to the user.
-                        Toast.makeText(
-                            this@Login,
-                            "Authentication failed, please register first.",
-                            Toast.LENGTH_SHORT,
-                        ).show()
+                // Create an intent to navigate to the MainActivity
+                val intent = Intent(this@LoginActivity, MainActivity::class.java)
+                startActivity(intent)
+                finish() // Optional: close the current activity
 
-                        Log.e("Login Error", "Authentication failed", task.exception)
+            } else {
+                // If sign in fails, display a message to the user.
+                Toast.makeText(
+                    this@LoginActivity,
+                    "Authentication failed, please register first.",
+                    Toast.LENGTH_SHORT,
+                ).show()
 
-                    }
-                }
+                Log.e("Login Error", "Authentication failed")
+
+            }
         }
     }
 

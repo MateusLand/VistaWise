@@ -1,4 +1,4 @@
-package com.example.vistawise
+package view.ui
 
 import android.content.Intent
 import android.os.Bundle
@@ -7,7 +7,10 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import view.adapter.DestinationsAdapter
+import com.example.vistawise.R
 import com.google.firebase.auth.FirebaseAuth
+import model.Destination
 
 class MainActivity : AppCompatActivity() {
 
@@ -30,7 +33,7 @@ class MainActivity : AppCompatActivity() {
 
         if (currentUser == null) {
             // If the user is null, navigate to the LoginActivity
-            val intent = Intent(this, Login::class.java)
+            val intent = Intent(this, LoginActivity::class.java)
             startActivity(intent)
             finish() // Optional: close the current activity
         } else {
@@ -45,7 +48,7 @@ class MainActivity : AppCompatActivity() {
                 auth.signOut()
 
                 // Navigate back to the LoginActivity
-                val intent = Intent(this, Login::class.java)
+                val intent = Intent(this, LoginActivity::class.java)
                 startActivity(intent)
                 finish() // Optional: close the current activity
             }
