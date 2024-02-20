@@ -8,6 +8,10 @@ android {
     namespace 'com.example.vistawise'
     compileSdk 34
 
+    viewBinding {
+        enabled = true
+    }
+
     defaultConfig {
         applicationId "com.example.vistawise"
         minSdk 26

@@ -1,24 +1,21 @@
 package view.ui
 
-import viewmodel.LoginViewModel
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.widget.Button
-import android.widget.ProgressBar
-import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
-import com.example.vistawise.R
-import com.google.android.material.textfield.TextInputEditText
+import com.example.vistawise.databinding.ActivityLoginBinding
 import com.google.firebase.auth.FirebaseAuth
-import androidx.activity.viewModels
 import network.UserService
 import repository.UserRepository
+import viewmodel.LoginViewModel
 
 class LoginActivity : AppCompatActivity() {
+    private lateinit var binding: ActivityLoginBinding
     private lateinit var auth: FirebaseAuth
 
     private val loginViewModel: LoginViewModel by viewModels {
@@ -28,19 +25,15 @@ class LoginActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_login)
+        binding = ActivityLoginBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
+        // Initialize Firebase Auth
         auth = FirebaseAuth.getInstance()
 
-        val editTextEmail = findViewById<TextInputEditText>(R.id.email)
-        val editTextPassword = findViewById<TextInputEditText>(R.id.password)
-        val progressBar = findViewById<ProgressBar>(R.id.progressBar)
-        val buttonLogin = findViewById<Button>(R.id.btn_login)
-        val registerNow = findViewById<TextView>(R.id.registerNow)
-
-        val forgotPasswordLink = findViewById<TextView>(R.id.forgotPassword)
-        forgotPasswordLink.setOnClickListener {
-            val email = editTextEmail.text.toString()
+        // Set click listener for forgotPassword TextView
+        binding.forgotPassword.setOnClickListener {
+            val email = binding.email.text.toString()
 
             if (email.isNotEmpty()) {
                 auth.sendPasswordResetEmail(email)
@@ -50,7 +43,7 @@ class LoginActivity : AppCompatActivity() {
                                 this@LoginActivity,
                                 "Password reset email sent. Check your email.",
                                 Toast.LENGTH_SHORT
-                                ).show()
+                            ).show()
                         } else {
                             Toast.makeText(
                                 this@LoginActivity,
@@ -64,36 +57,23 @@ class LoginActivity : AppCompatActivity() {
                     this@LoginActivity,
                     "Enter your registered email address.",
                     Toast.LENGTH_SHORT
-                    ).show()
+                ).show()
             }
         }
 
         // Set click listener for registerNow TextView
-        registerNow.setOnClickListener {
-            val intent = Intent(this@LoginActivity, RegisterActivity::class.java)
-            startActivity(intent)
-            finish() // Optional: close the current activity
+        binding.registerNow.setOnClickListener {
+            goToRegister()
         }
 
-        buttonLogin.setOnClickListener {
-            val email = editTextEmail.text.toString()
-            val password = editTextPassword.text.toString()
+        binding.btnLogin.setOnClickListener {
 
-            if (email.isEmpty() || password.isEmpty()) {
-                // Show an error message or handle the empty fields as needed
-                Toast.makeText(this, "Email or password cannot be empty", Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
-            }
-
-            buttonLogin.visibility = View.INVISIBLE
-            progressBar.visibility = View.VISIBLE
-
-            loginViewModel.loginUser(email, password)
+            handleBtnLoginClick()
         }
 
+        // Observe loginStatus LiveData
         loginViewModel.loginStatus.observe(this) { isLoggedIn ->
-            progressBar.visibility = View.INVISIBLE
-            buttonLogin.visibility = View.VISIBLE
+            loading(false)
 
             if (isLoggedIn) {
                 Toast.makeText(
@@ -102,10 +82,7 @@ class LoginActivity : AppCompatActivity() {
                     Toast.LENGTH_SHORT,
                 ).show()
 
-                // Create an intent to navigate to the MainActivity
-                val intent = Intent(this@LoginActivity, MainActivity::class.java)
-                startActivity(intent)
-                finish() // Optional: close the current activity
+                goToHome()
 
             } else {
                 // If sign in fails, display a message to the user.
@@ -121,15 +98,44 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
-    public override fun onStart() {
-        super.onStart()
-        // Check if user is signed in (non-null) and update UI accordingly.
-        val currentUser = auth.currentUser
-        if (currentUser != null) {
-            val intent = Intent(this, MainActivity::class.java)
-            startActivity(intent)
-            finish() // Optional: close the current activity
+    // Helper function for loading
+    private fun loading(isLoading: Boolean) {
+        if (isLoading) {
+            binding.progressBar.visibility = View.VISIBLE
+            binding.btnLogin.visibility = View.INVISIBLE
+        } else {
+            binding.progressBar.visibility = View.INVISIBLE
+            binding.btnLogin.visibility = View.VISIBLE
         }
     }
 
+    // Helper function for going to home activity
+    private fun goToHome() {
+        val intent = Intent(this, MainActivity::class.java)
+        startActivity(intent)
+        finish()
+    }
+
+    // Helper function for going to register activity
+    private fun goToRegister() {
+        val intent = Intent(this, RegisterActivity::class.java)
+        startActivity(intent)
+        finish()
+    }
+
+    // Helper function for handling login
+    private fun handleBtnLoginClick() {
+        val email = binding.email.text.toString()
+        val password = binding.password.text.toString()
+
+        if (email.isEmpty() || password.isEmpty()) {
+            // Show an error message or handle the empty fields as needed
+            Toast.makeText(this, "Email or password cannot be empty", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        loading(true)
+
+        loginViewModel.loginUser(email, password)
+    }
 }
