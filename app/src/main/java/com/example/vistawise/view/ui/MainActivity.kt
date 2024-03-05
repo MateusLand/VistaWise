@@ -69,3 +69,9 @@ class MainActivity : AppCompatActivity() {
         }
     }
 }
+
+
+// destination repository
+// destination service
+// main view model
+// main activity refactor to MVVM

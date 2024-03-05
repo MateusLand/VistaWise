@@ -5,15 +5,14 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.example.vistawise.R
 import com.example.vistawise.viewmodel.SplashViewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 @SuppressLint("CustomSplashScreen")
 class SplashActivity : AppCompatActivity() {
-
-    private val splashViewModel: SplashViewModel by viewModels()
+    private val splashViewModel: SplashViewModel by viewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

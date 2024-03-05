@@ -9,13 +9,13 @@ import com.example.vistawise.databinding.ActivityLoginBinding
 import com.example.vistawise.viewmodel.LoginViewModel
 import com.example.vistawise.viewmodel.UserAuthResult
 import com.google.firebase.auth.FirebaseAuth
-import org.koin.android.ext.android.inject
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class LoginActivity : AppCompatActivity() {
     private lateinit var binding: ActivityLoginBinding
     private lateinit var auth: FirebaseAuth
 
-    private val loginViewModel: LoginViewModel by inject()
+    private val loginViewModel: LoginViewModel by viewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
