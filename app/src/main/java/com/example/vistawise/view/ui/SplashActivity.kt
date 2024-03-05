@@ -1,4 +1,4 @@
-package view.ui
+package com.example.vistawise.view.ui
 
 import android.annotation.SuppressLint
 import android.content.Intent
@@ -7,20 +7,13 @@ import android.os.Handler
 import android.os.Looper
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProvider
 import com.example.vistawise.R
-import com.google.firebase.auth.FirebaseAuth
-import network.UserService
-import repository.UserRepository
-import viewmodel.SplashViewModel
+import com.example.vistawise.viewmodel.SplashViewModel
 
 @SuppressLint("CustomSplashScreen")
 class SplashActivity : AppCompatActivity() {
 
-    private val splashViewModel: SplashViewModel by viewModels {
-        ViewModelProvider.AndroidViewModelFactory.getInstance(application)
-        SplashViewModelFactory(UserRepository(UserService(FirebaseAuth.getInstance()))) // Provide an instance of UserRepository
-    }
+    private val splashViewModel: SplashViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,7 +22,7 @@ class SplashActivity : AppCompatActivity() {
 
         Handler(Looper.getMainLooper()).postDelayed({
         splashViewModel.isUserLogged()
-        }, 1000) // 2000 milliseconds (3 seconds) delay
+        }, 1000)
 
         splashViewModel.loginStatus.observe(this) { isLoggedIn ->
 

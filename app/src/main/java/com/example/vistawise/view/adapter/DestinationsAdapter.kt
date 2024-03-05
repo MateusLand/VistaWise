@@ -1,4 +1,4 @@
-package view.adapter
+package com.example.vistawise.view.adapter
 
 import android.view.LayoutInflater
 import android.view.View
@@ -7,7 +7,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.vistawise.R
-import model.Destination
+import com.example.vistawise.model.Destination
 
 class DestinationsAdapter(private val destinations: List<Destination>) :
     RecyclerView.Adapter<DestinationsAdapter.ViewHolder>() {
