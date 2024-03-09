@@ -1,4 +1,4 @@
-package com.example.vistawise.view.adapter
+package view.adapter
 
 import android.view.LayoutInflater
 import android.view.View
@@ -33,3 +33,5 @@ class DestinationsAdapter(private val destinations: List<Destination>) :
         val destinationName: TextView = itemView.findViewById(R.id.destination_name)
     }
 }
+
+// implement glide

@@ -1,6 +1,7 @@
 package com.example.vistawise.module.di
 
 import com.example.vistawise.viewmodel.LoginViewModel
+import com.example.vistawise.viewmodel.MainViewModel
 import com.example.vistawise.viewmodel.RegisterViewModel
 import com.example.vistawise.viewmodel.SplashViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
@@ -22,6 +23,13 @@ val viewModelModule = module {
 
     viewModel {
         SplashViewModel(
+            userRepository = get()
+        )
+    }
+
+    viewModel {
+        MainViewModel(
+            destinationRepository = get(),
             userRepository = get()
         )
     }

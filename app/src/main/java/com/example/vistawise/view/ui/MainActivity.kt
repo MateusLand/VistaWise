@@ -2,76 +2,80 @@ package com.example.vistawise.view.ui
 
 import android.content.Intent
 import android.os.Bundle
-import android.widget.Button
-import android.widget.TextView
+import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.example.vistawise.R
-import com.example.vistawise.model.Destination
-import com.example.vistawise.view.adapter.DestinationsAdapter
-import com.google.firebase.auth.FirebaseAuth
+import com.example.vistawise.databinding.ActivityMainBinding
+import com.example.vistawise.viewmodel.MainResult
+import com.example.vistawise.viewmodel.MainViewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
+import view.adapter.DestinationsAdapter
 
 class MainActivity : AppCompatActivity() {
-
-    private val auth = FirebaseAuth.getInstance()
+    private lateinit var binding: ActivityMainBinding
+    private val mainActivityViewModel: MainViewModel by viewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        // Check if the user is signed in (non-null)
-        val currentUser = auth.currentUser
+        mainActivityViewModel.getUser()
 
-        // Use View Binding or Kotlin Android Extensions for cleaner code
-        val userDetailsTextView = findViewById<TextView>(R.id.user_details)
-        val signOutButton = findViewById<Button>(R.id.btn_SignOut)
-        val rvDestination = findViewById<RecyclerView>(R.id.rv_Destination)
+        // Set up the RecyclerView
+        binding.rvDestination.layoutManager =
+            LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
 
-        // Initialize RecyclerView
-        rvDestination.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+        mainActivityViewModel.mainResult.observe(this) { mainResult ->
+            handleScreenState(mainResult)
+        }
 
-        if (currentUser == null) {
-            // If the user is null, navigate to the LoginActivity
-            val intent = Intent(this, LoginActivity::class.java)
-            startActivity(intent)
-            finish() // Optional: close the current activity
-        } else {
-            // User is already signed in, proceed with your main activity logic
+        mainActivityViewModel.getTopDestinations()
 
-            // Display user email or perform other actions
-            userDetailsTextView.text = "Hello, ${currentUser.email}"
+    }
 
-            // Set up sign-out button click listener
-            signOutButton.setOnClickListener {
-                // Sign out the user
-                auth.signOut()
-
-                // Navigate back to the LoginActivity
-                val intent = Intent(this, LoginActivity::class.java)
-                startActivity(intent)
-                finish() // Optional: close the current activity
+    private fun handleScreenState(mainResult: MainResult) {
+        when (mainResult) {
+            is MainResult.Loading -> {
+                loading(true)
             }
 
-            // Create dummy data for destinations
-            val destinations = listOf(
-                Destination("London", R.drawable.london),
-                Destination("Paris", R.drawable.paris),
-                Destination("Budapest", R.drawable.budapest),
-                Destination("Rome", R.drawable.rome)
+            is MainResult.UserSuccess -> {
+                binding.userDetails.text = "Hello, ${mainResult.userName}"
+            }
 
-                // Add more destinations as needed
-            )
+            is MainResult.UserError -> {
+                Toast.makeText(this, mainResult.userError.message, Toast.LENGTH_SHORT).show()
+                goToLogin()
+            }
 
-            // Set up RecyclerView adapter
-            val adapter = DestinationsAdapter(destinations)
-            rvDestination.adapter = adapter
+            is MainResult.DestinationSuccess -> {
+                loading(false)
+                val adapter = DestinationsAdapter(mainResult.destinations)
+                binding.rvDestination.adapter = adapter
+            }
+
+            is MainResult.DestinationError -> {
+                loading(false)
+                Toast.makeText(this, mainResult.error.message, Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    private fun goToLogin() {
+        val intent = Intent(this, LoginActivity::class.java)
+        startActivity(intent)
+        finish()
+    }
+
+    private fun loading(isLoading: Boolean) {
+        if (isLoading) {
+            binding.progressBar.visibility = View.VISIBLE
+            binding.rvDestination.visibility = View.INVISIBLE
+        } else {
+            binding.progressBar.visibility = View.INVISIBLE
+            binding.rvDestination.visibility = View.VISIBLE
         }
     }
 }
-
-
-// destination repository
-// destination service
-// main view model
-// main activity refactor to MVVM

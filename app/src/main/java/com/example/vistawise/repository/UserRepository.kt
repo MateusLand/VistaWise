@@ -1,5 +1,6 @@
 package com.example.vistawise.repository
 
+import com.example.vistawise.model.User
 import com.example.vistawise.network.UserService
 
 class UserRepository(private val userService: UserService) {
@@ -20,6 +21,13 @@ class UserRepository(private val userService: UserService) {
         return userService.register(email, password)
     }
 
+    suspend fun getUser(): Result<User> {
+        return userService.getCurrentUser()
+    }
+
+    suspend fun logout(): Result<Boolean> {
+        return userService.logout()
+    }
 
 }
 
