@@ -3,35 +3,59 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    app:cardCornerRadius="8dp"
-    app:cardElevation="4dp"
+    app:cardCornerRadius="20dp"
+    app:cardElevation="1dp"
     app:cardUseCompatPadding="true">
 
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+    <!-- Use FrameLayout as the container -->
+    <FrameLayout
+        android:layout_width="200dp"
+        android:layout_height="250dp">
 
         <!-- Destination Image -->
         <ImageView
             android:id="@+id/destination_image"
-            android:layout_width="120dp"
-            android:layout_height="120dp"
-            android:layout_weight="1"
-            android:scaleType="centerInside"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
             android:src="@drawable/london" />
 
-        <!-- Destination Name -->
+        <!-- Destination Name TextView -->
         <TextView
             android:id="@+id/destination_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="bottom|center_horizontal"
+            android:layout_marginStart="10dp"
             android:layout_marginTop="8dp"
-            android:text="Destination Name"
-            android:textSize="12sp"
-            android:layout_gravity="center"
+            android:layout_marginEnd="60dp"
+            android:layout_marginBottom="30dp"
+            android:paddingStart="8dp"
+            android:paddingTop="4dp"
+            android:paddingEnd="8dp"
+            android:paddingBottom="4dp"
+            android:text="London"
+            android:textColor="@android:color/white"
+            android:textSize="20sp"
             android:textStyle="bold" />
 
-    </LinearLayout>
+        <Button
+            android:layout_width="28dp"
+            android:layout_height="35dp"
+            android:layout_marginStart="160dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="10dp"
+            android:backgroundTint="@color/white"/>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/bookmark_icon"
+            android:layout_marginStart="162dp"
+            android:layout_marginTop="10dp"
+            android:backgroundTint="@color/black"/>
+
+
+    </FrameLayout>
 
 </androidx.cardview.widget.CardView>

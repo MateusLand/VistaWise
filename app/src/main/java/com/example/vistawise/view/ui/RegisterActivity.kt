@@ -20,6 +20,9 @@ class RegisterActivity : AppCompatActivity() {
         binding = ActivityRegisterBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        binding.tvHaveAccount.text
+
+
         // Set click listener for loginNow TextView
         binding.loginNow.setOnClickListener {
             goToLogin()
