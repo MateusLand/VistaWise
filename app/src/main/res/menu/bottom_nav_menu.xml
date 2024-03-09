@@ -1,0 +1,19 @@
+<!-- bottom_nav_menu.xml -->
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/navigation_home"
+        android:icon="@drawable/ic_home"
+        android:title="Home" />
+    <item
+        android:id="@+id/navigation_dashboard"
+        android:icon="@drawable/ic_search"
+        android:title="Search" />
+    <item
+        android:id="@+id/navigation_notifications"
+        android:icon="@drawable/ic_saved"
+        android:title="Saved" />
+    <item
+        android:id="@+id/navigation_profile"
+        android:icon="@drawable/ic_settings"
+        android:title="Settings" />
+</menu>
