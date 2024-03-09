@@ -1,4 +1,4 @@
-package model
+package com.example.vistawise.model
 
 data class Destination(
     val name: String,

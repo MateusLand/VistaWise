@@ -1,4 +1,4 @@
-package view.ui
+package com.example.vistawise.view.ui
 
 import android.content.Intent
 import android.os.Bundle
@@ -7,10 +7,10 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import view.adapter.DestinationsAdapter
 import com.example.vistawise.R
+import com.example.vistawise.model.Destination
+import com.example.vistawise.view.adapter.DestinationsAdapter
 import com.google.firebase.auth.FirebaseAuth
-import model.Destination
 
 class MainActivity : AppCompatActivity() {
 
@@ -69,3 +69,9 @@ class MainActivity : AppCompatActivity() {
         }
     }
 }
+
+
+// destination repository
+// destination service
+// main view model
+// main activity refactor to MVVM

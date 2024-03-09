@@ -1,27 +1,21 @@
-package view.ui
+package com.example.vistawise.view.ui
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.Toast
-import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProvider
 import com.example.vistawise.databinding.ActivityLoginBinding
+import com.example.vistawise.viewmodel.LoginViewModel
+import com.example.vistawise.viewmodel.UserAuthResult
 import com.google.firebase.auth.FirebaseAuth
-import network.UserService
-import repository.UserRepository
-import viewmodel.LoginViewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class LoginActivity : AppCompatActivity() {
     private lateinit var binding: ActivityLoginBinding
     private lateinit var auth: FirebaseAuth
 
-    private val loginViewModel: LoginViewModel by viewModels {
-        ViewModelProvider.AndroidViewModelFactory.getInstance(application)
-        LoginViewModelFactory(UserRepository(UserService(FirebaseAuth.getInstance()))) // Provide an instance of UserRepository
-    }
+    private val loginViewModel: LoginViewModel by viewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,22 +30,7 @@ class LoginActivity : AppCompatActivity() {
             val email = binding.email.text.toString()
 
             if (email.isNotEmpty()) {
-                auth.sendPasswordResetEmail(email)
-                    .addOnCompleteListener { task ->
-                        if (task.isSuccessful) {
-                            Toast.makeText(
-                                this@LoginActivity,
-                                "Password reset email sent. Check your email.",
-                                Toast.LENGTH_SHORT
-                            ).show()
-                        } else {
-                            Toast.makeText(
-                                this@LoginActivity,
-                                "Failed to send password reset email.",
-                                Toast.LENGTH_SHORT
-                            ).show()
-                        }
-                    }
+                loginViewModel.resetPassword(email)
             } else {
                 Toast.makeText(
                     this@LoginActivity,
@@ -61,39 +40,67 @@ class LoginActivity : AppCompatActivity() {
             }
         }
 
-        // Set click listener for registerNow TextView
+        //  click listener for registerNow TextView
         binding.registerNow.setOnClickListener {
             goToRegister()
         }
 
+        //  click listener for btnLogin
         binding.btnLogin.setOnClickListener {
 
             handleBtnLoginClick()
         }
 
         // Observe loginStatus LiveData
-        loginViewModel.loginStatus.observe(this) { isLoggedIn ->
-            loading(false)
+        loginViewModel.userAuthStatus.observe(this) { userAuthResult ->
 
-            if (isLoggedIn) {
+            handleScreenState(userAuthResult)
+        }
+
+    }
+
+    // Helper function for handling screen state
+    private fun handleScreenState(userAuthResult: UserAuthResult) {
+        when (userAuthResult) {
+            is UserAuthResult.Loading -> {
+                loading(true)
+            }
+
+            is UserAuthResult.UserAuthSuccess -> {
+                loading(false)
                 Toast.makeText(
                     this@LoginActivity,
                     "Login Successful.",
                     Toast.LENGTH_SHORT,
                 ).show()
-
                 goToHome()
+            }
 
-            } else {
-                // If sign in fails, display a message to the user.
+            is UserAuthResult.PasswordResetError -> {
+                loading(false)
+                Toast.makeText(
+                    this@LoginActivity,
+                    "Failed to send password reset email.",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+
+            UserAuthResult.PasswordResetSuccess -> {
+                loading(false)
+                Toast.makeText(
+                    this@LoginActivity,
+                    "Password reset email sent. Check your email.",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+
+            is UserAuthResult.UserAuthError -> {
+                loading(false)
                 Toast.makeText(
                     this@LoginActivity,
                     "Authentication failed, please register first.",
                     Toast.LENGTH_SHORT,
                 ).show()
-
-                Log.e("Login Error", "Authentication failed")
-
             }
         }
     }
