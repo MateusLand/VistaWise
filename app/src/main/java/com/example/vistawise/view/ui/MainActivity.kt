@@ -10,7 +10,7 @@ import com.example.vistawise.databinding.ActivityMainBinding
 import com.example.vistawise.viewmodel.MainResult
 import com.example.vistawise.viewmodel.MainViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import view.adapter.DestinationsAdapter
+import com.example.vistawise.view.adapter.DestinationsAdapter
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding

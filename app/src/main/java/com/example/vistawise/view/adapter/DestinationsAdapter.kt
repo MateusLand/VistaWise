@@ -1,4 +1,4 @@
-package view.adapter
+package com.example.vistawise.view.adapter
 
 import android.view.LayoutInflater
 import android.view.View
@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.vistawise.R
 import com.example.vistawise.model.Destination
 
@@ -20,8 +21,12 @@ class DestinationsAdapter(private val destinations: List<Destination>) :
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val destination = destinations[position]
         holder.destinationName.text = destination.name
-        // Set image using Glide, Picasso, or setImageResource
-        holder.destinationImage.setImageResource(destination.imageResId)
+
+        // Load image using Glide
+        Glide.with(holder.itemView.context)
+            .load(destination.imageResId)
+            .placeholder(R.drawable.ic_placeholder) // Placeholder image while loading
+            .into(holder.destinationImage)
     }
 
     override fun getItemCount(): Int {
@@ -33,5 +38,3 @@ class DestinationsAdapter(private val destinations: List<Destination>) :
         val destinationName: TextView = itemView.findViewById(R.id.destination_name)
     }
 }
-
-// implement glide

@@ -10,4 +10,3 @@ class DestinationRepository(private val destinationService: DestinationService) 
     }
 }
 
-// is this everything for this repository so far?
