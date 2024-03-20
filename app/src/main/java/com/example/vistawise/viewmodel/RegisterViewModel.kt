@@ -22,7 +22,7 @@ class RegisterViewModel(private val userRepository: UserRepository) : ViewModel(
     val userRegistrationStatus: LiveData<UserRegistrationResult> = _userRegistrationStatus
 
     // Function to register a new user that interacts with the repository
-    fun registerUser(email: String, password: String, name: String) {
+    fun registerUser(email: String, password: String) {
         _userRegistrationStatus.value = UserRegistrationResult.Loading
         viewModelScope.launch {
             val result = userRepository.registerUser(email, password)
