@@ -105,14 +105,13 @@ class RegisterActivity : AppCompatActivity() {
     private fun handleBtnRegisterClick() {
         val email = binding.email.text.toString()
         val password = binding.password.text.toString()
-        val name = binding.name.text.toString()
 
-        if (email.isEmpty() || password.isEmpty() || name.isEmpty()) {
+        if (email.isEmpty() || password.isEmpty()) {
             Toast.makeText(this, "Fields cannot be empty", Toast.LENGTH_SHORT).show()
             return
         }
 
-        registerViewModel.registerUser(email, password, name)
+        registerViewModel.registerUser(email, password)
     }
 
 }
